@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from approvals import views
 
 urlpatterns = [
-    path('', include('approvals.urls', namespace='approvals')),
+    path('', views.index, name='index'),
+    path('approvals/', include('approvals.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
