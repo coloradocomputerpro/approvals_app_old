@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-6">
+    <h2 class="text-xl font-semibold mb-4">All Requests</h2>
+    <ul>
+        {% for request in requests %}
+        <li class="mb-2">
+            <a href="{% url 'request_detail' request.pk %}" class="text-indigo-600 hover:text-indigo-500 font-semibold">{{ request.title }}</a>
+            <span class="text-gray-600">({{ request.status }})</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

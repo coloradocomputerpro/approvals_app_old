@@ -12,3 +12,13 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('create/', views.create, name='create'),
 ]
+
+from django.urls import path
+from .views import RequestCreateView, RequestListView, RequestDetailView, RequestUpdateView
+
+urlpatterns += [
+    path('', RequestListView.as_view(), name='index'),
+    path('create/', RequestCreateView.as_view(), name='request_create'),
+    path('<int:pk>/', RequestDetailView.as_view(), name='request_detail'),
+    path('<int:pk>/update/', RequestUpdateView.as_view(), name='request_update'),
+]

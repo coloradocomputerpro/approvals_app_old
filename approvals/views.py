@@ -40,6 +40,33 @@ def manage_notices(request):
 def manage_users_groups(request):
     return render(request, 'manage_users_groups.html')
 
-def create(request):
-    # TODO: Implement create view
-    pass
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from .models import Request
+
+class RequestCreateView(CreateView):
+    model = Request
+    fields = ['title', 'description']
+    template_name = 'approvals/request_create.html'
+    success_url = reverse_lazy('index')
+
+from django.views.generic.detail import DetailView
+
+class RequestDetailView(DetailView):
+    model = Request
+    template_name = 'approvals/request_detail.html'
+
+from django.views.generic.edit import UpdateView
+
+class RequestUpdateView(UpdateView):
+    model = Request
+    fields = ['title', 'description', 'status']
+    template_name = 'approvals/request_update.html'
+    success_url = reverse_lazy('index')
+
+from django.views.generic.list import ListView
+
+class RequestListView(ListView):
+    model = Request
+    template_name = 'approvals/request_list.html'
+    context_object_name = 'requests'
