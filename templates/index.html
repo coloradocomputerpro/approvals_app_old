@@ -1,68 +1,32 @@
-<!-- pulse/templates/approvals/index.html -->
-
 {% extends 'base.html' %}
 
-{% block title %}Notices{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-  <h1 class="text-3xl font-bold text-gray-900">Notices</h1>
-  <div class="mt-4">
-    <a href="{% url 'approvals:create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150">
-      Create New Notice
-    </a>
-  </div>
-  <div class="mt-4">
-    {% if notices %}
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Type</th>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Title</th>
-            <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th class="px-6 py-3 bg-gray-50"></th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          {% for notice in notices %}
-            <tr>
-              <td class="px-6 py-4 whitespace-no-wrap">
-                <div class="text-sm leading-5 text-gray-900">{{ notice.type }}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap">
-                <div class="text-sm leading-5 text-gray-900">{{ notice.title }}</div>
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap">
-                {% if notice.is_pending %}
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                    Pending
-                  </span>
-                {% elif notice.is_in_progress %}
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                    In Progress
-                  </span>
-                {% elif notice.is_in_review %}
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                    In Review
-                  </span>
-                {% elif notice.is_cancelled %}
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                    Cancelled
-                  </span>
-                {% elif notice.is_completed %}
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                    Completed
-                  </span>
-                {% endif %}
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                <a href="{% url 'approvals:view_notice' notice.pk %}" class="text-indigo-600 hover:text-indigo-900">View</a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-    </table>
-  {% else %}
-    <p class="mt-4 text-gray-500">No notices found.</p>
-  {% endif %}
-</div>
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="flex justify-between">
+                <h2 class="text-lg font-medium text-gray-900">Requests</h2>
+                <a href="{% url 'approvals:create' %}" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Create a Request
+                </a>
+            </div>
+            <div class="mt-6 border-t border-gray-200">
+                <dl>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Request #1</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec nunc vel justo auctor pretium vitae sed leo. Vestibulum id magna ullamcorper, congue lectus at, feugiat ante. Proin vitae ultricies orci.</dd>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Request #2</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">Vivamus vitae erat euismod, rhoncus est vitae, iaculis tortor. Donec nec augue in enim molestie dictum non non elit. Nulla auctor, sapien sed rutrum consequat, mi tortor malesuada neque, eu ultricies arcu nulla at mauris. Praesent sit amet mauris euismod, aliquam velit sed, interdum ipsum.</dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Request #3</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">Morbi feugiat commodo velit. Sed pulvinar erat vel bibendum commodo. Suspendisse at augue purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam a lacinia libero. Sed laoreet ipsum eget velit sodales facilisis. Donec imperdiet, mauris eget dapibus blandit, augue mauris feugiat augue, id dictum nisl magna nec odio. </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
 {% endblock %}
