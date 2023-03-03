@@ -1,103 +1,143 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-{% block content %}
 <div class="container mx-auto">
     <div class="md:flex bg-white rounded-lg p-6 mt-6">
-        <div class="md:flex-shrink-0">
-            <img class="rounded-lg md:w-56" src="{% static 'img/user-profile.jpg' %}" alt="User Profile Picture">
-        </div>
-        <div class="mt-4 md:mt-0 md:ml-6">
-            <h2 class="text-lg font-semibold">Welcome Back, John Doe</h2>
-            <p class="mt-3 text-base text-gray-700">
-                Here you can view and manage your requests.
-            </p>
-        </div>
+      <div class="mt-4 md:mt-0 md:ml-6">
+        <h3 class="text-lg font-medium mb-4">Quick Actions</h3>
+        <a href="{% url 'approvals:create' %}"><button class="bg-indigo-600 hover:bg-indigo-500 text-white py-2 px-4 rounded-lg">New Request</button></a>
+      </div>
     </div>
 
-    <div class="flex justify-between py-6">
-        <div class="bg-white rounded-lg p-6 flex-1 mr-2">
-            <h2 class="text-lg font-semibold mb-4">Pending Requests</h2>
-            <ul>
-                <li class="border-b border-gray-400 py-4">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Request #1</h3>
-                            <p class="text-sm text-gray-600">Created on 1/1/2022</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-sm text-gray-600 mr-2">Pending</span>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm">View</a>
-                        </div>
-                    </div>
-                </li>
-                <li class="border-b border-gray-400 py-4">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Request #2</h3>
-                            <p class="text-sm text-gray-600">Created                        on 1/5/2022</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-sm text-gray-600 mr-2">Pending</span>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm">View</a>
-                        </div>
-                    </div>
-                </li>
-                <li class="border-b border-gray-400 py-4">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Request #3</h3>
-                            <p class="text-sm text-gray-600">Created on 1/10/2022</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-sm text-gray-600 mr-2">Pending</span>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm">View</a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="bg-white rounded-lg p-6 flex-1 ml-2">
-            <h2 class="text-lg font-semibold mb-4">Approved Requests</h2>
-            <ul>
-                <li class="border-b border-gray-400 py-4">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Request #4</h3>
-                            <p class="text-sm text-gray-600">Created on 2/1/2022</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-sm text-green-600 mr-2">Approved</span>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm">View</a>
-                        </div>
-                    </div>
-                </li>
-                <li class="border-b border-gray-400 py-4">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Request #5</h3>
-                            <p class="text-sm text-gray-600">Created on 2/5/2022</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-sm text-green-600 mr-2">Approved</span>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm">View</a>
-                        </div>
-                    </div>
-                </li>
-                <li class="border-b border-gray-400 py-4">
-                    <div class="flex justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">Request #6</h3>
-                            <p class="text-sm text-gray-600">Created on 2/10/2022</p>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="text-sm text-green-600 mr-2">Approved</span>
-                            <a href="#" class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm">View</a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
+
+<div class="container mx-auto">
+  <div class="md:flex bg-white rounded-lg p-6 mt-6">
+    <div class="mt-4 md:mt-0 md:ml-6">
+      <h3 class="text-lg font-medium mb-4">My Requests</h3>
+      <ul class="space-y-2">
+        {% for request in requests %}
+        <li>
+          <a
+            href="{% url 'approvals:detail' request.id %}"
+            class="text-indigo-600 hover:text-indigo-500 font-medium"
+            >{{ request.title }}</a
+          >
+          <br />
+          <span class="text-gray-500">{{ request.status }}</span>
+        </li>
+        {% empty %}
+        <li>No requests yet.</li>
+        {% endfor %}
+      </ul>
     </div>
+  </div>
+
+  <div class="flex justify-between py-6">
+    <div class="bg-white rounded-lg p-6 flex-1 mr-2">
+      <h2 class="text-lg font-semibold mb-4">Pending Requests</h2>
+      <ul>
+        <li class="border-b border-gray-400 py-4">
+          <div class="flex justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-900">Request #1</h3>
+              <p class="text-sm text-gray-600">Created on 1/1/2022</p>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-gray-600 mr-2">Pending</span>
+              <a
+                href="#"
+                class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm"
+                >View</a
+              >
+            </div>
+          </div>
+        </li>
+        <li class="border-b border-gray-400 py-4">
+          <div class="flex justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-900">Request #2</h3>
+              <p class="text-sm text-gray-600">Created on 1/5/2022</p>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-gray-600 mr-2">Pending</span>
+              <a
+                href="#"
+                class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm"
+                >View</a
+              >
+            </div>
+          </div>
+        </li>
+        <li class="border-b border-gray-400 py-4">
+          <div class="flex justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-900">Request #3</h3>
+              <p class="text-sm text-gray-600">Created on 1/10/2022</p>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-gray-600 mr-2">Pending</span>
+              <a
+                href="#"
+                class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm"
+                >View</a
+              >
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="bg-white rounded-lg p-6 flex-1 ml-2">
+      <h2 class="text-lg font-semibold mb-4">Approved Requests</h2>
+      <ul>
+        <li class="border-b border-gray-400 py-4">
+          <div class="flex justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-900">Request #4</h3>
+              <p class="text-sm text-gray-600">Created on 2/1/2022</p>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-green-600 mr-2">Approved</span>
+              <a
+                href="#"
+                class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm"
+                >View</a
+              >
+            </div>
+          </div>
+        </li>
+        <li class="border-b border-gray-400 py-4">
+          <div class="flex justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-900">Request #5</h3>
+              <p class="text-sm text-gray-600">Created on 2/5/2022</p>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-green-600 mr-2">Approved</span>
+              <a
+                href="#"
+                class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm"
+                >View</a
+              >
+            </div>
+          </div>
+        </li>
+        <li class="border-b border-gray-400 py-4">
+          <div class="flex justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-900">Request #6</h3>
+              <p class="text-sm text-gray-600">Created on 2/10/2022</p>
+            </div>
+            <div class="flex items-center">
+              <span class="text-sm text-green-600 mr-2">Approved</span>
+              <a
+                href="#"
+                class="text-indigo-600 hover:text-indigo-500 font-semibold text-sm"
+                >View</a
+              >
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
-{% endblock %}    
+{% endblock %}
