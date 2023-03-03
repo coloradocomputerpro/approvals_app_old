@@ -1,0 +1,125 @@
+<!-- pulse/templates/base.html -->
+
+{% load static tailwind_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'tailwind.css' %}">
+  </head>
+  <body class="bg-gray-100">
+    <nav class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <a href="/" class="text-gray-800 text-xl font-bold">Pulse</a>
+            </div>
+            {% if user.is_authenticated %}
+              <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline">
+                  <a href="{% url 'approvals:index' %}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Notices</a>
+                  {% if user.is_superuser %}
+                    <a href="{% url 'admin:index' %}" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Admin</a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <div class="hidden md:block">
+            <div class="ml-4 flex items-center md:ml-6">
+              {% if user.is_authenticated %}
+                <div class="ml-3 relative">
+                  <div>
+                    <button class="max-w-xs flex items-center text-sm rounded-full text-gray-800 focus:outline-none focus:shadow-solid" id="user-menu" aria-label="User menu" aria-haspopup="true">
+                      <span class="sr-only">Open user menu</span>
+                      <svg class="h-8 w-8 fill-current" viewBox="0 0 24 24"><path d="M6 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12zm0 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm8 10c3.313 0 6-2.687 6-6a5.954 5.954 0 0 0-1.77-4.24l-.03-.03A5.947 5.947 0 0 0 14 6a6 6 0 1 0 0 12zm0-2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>
+                    </button>
+                  </div>
+                  <div class="origin-top-right absolute right-0 mt                     -4 w-48 rounded-md shadow-lg z-10">
+                    <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                      <a href="{% url 'password_change' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Change password</a>
+                      <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Sign out</button>
+                      </form>
+                    </div>
+                </div>
+              {% else %}
+                <div class="ml-3">
+                  <a href="{% url 'login' %}" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Log in</a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="-mr-2 flex md:hidden">
+            <button class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500" aria-label="Main menu" aria-expanded="false" id="main-menu">
+              <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="md:hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 sm:px-3">
+          <a href="{% url 'approvals:index' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Notices</a>
+          {% if user.is_superuser %}
+            <a href="{% url 'admin:index' %}" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Admin</a>
+          {% endif %}
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-200">
+          {% if user.is_authenticated %}
+            <div class="flex items-center px-5">
+              <div class="flex-shrink-0">
+                <svg class="h-8 w-8 fill-current text-gray-400" viewBox="0 0 24 24"><path d="M12 14c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0-8a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+              </div>
+              <div class="ml-3">
+                <div class="font-medium text-base text-gray-800">{{ user.username }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ user.email }}</div>
+              </div>
+            </div>
+            <div class="mt-3 px-2">
+              <a href="{% url 'password_change' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Change password</a>
+              <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Sign out</button>
+              </form>
+            </div>
+          {% else %}
+            <div class="mt-3 px-2">
+              <a href="{% url 'login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:bg-gray-300">Log in</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-8">
+        {% for message in messages %}
+          <div class="bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md mb-4" role="alert">
+            <div class="flex">
+              <div class="py-1"><svg class="fill-current h-6 w-6 text-blue-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 3a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg></div>
+              <div>
+                <p class="font-bold">{{ message.tags|upper }}</p>
+                <p class="text-sm">{{ message }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    <script>
+      document.getElementById('main-menu').addEventListener('click', function() {
+        var mobileMenu = document.getElementById('mobile-menu');
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.classList.toggle('block');
+      });
+    </script>
+  </body>
+</html>
+
