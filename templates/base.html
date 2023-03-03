@@ -125,6 +125,26 @@
         
             <!-- Scripts -->
             <!-- <script src="{% static 'js/main.js' %}"></script> -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        let navButton = document.querySelector('.nav-button');
+                        let navMenu = document.querySelector('.nav-menu');
+
+                        navButton.addEventListener('click', function() {
+                        navButton.classList.toggle('change');
+                        });
+
+                        window.addEventListener('scroll', function() {
+                        let position = window.pageYOffset;
+                        if (position >= 200) {
+                            navMenu.classList.add('custom-navbar');
+                        } else {
+                            navMenu.classList.remove('custom-navbar');
+                        }
+                        });
+                    });
+                    </script>
+
         </body>
-        </html>
+</html>
     
