@@ -18,11 +18,8 @@ from django.urls import path, include
 from approvals import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('approvals/', include('approvals.urls')),
+    path('', include('approvals.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
     path("__reload__/", include("django_browser_reload.urls")),
 ]

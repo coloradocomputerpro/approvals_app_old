@@ -39,3 +39,7 @@ def manage_notices(request):
 @user_passes_test(lambda u: u.is_superuser)
 def manage_users_groups(request):
     return render(request, 'manage_users_groups.html')
+
+def create(request):
+    # TODO: Implement create view
+    pass
