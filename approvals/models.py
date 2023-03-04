@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 class Request(models.Model):
@@ -10,3 +11,14 @@ class Request(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class Program(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('approvals:program_detail', args=[str(self.id)])

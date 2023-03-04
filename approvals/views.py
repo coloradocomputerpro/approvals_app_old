@@ -12,6 +12,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.urls import reverse_lazy
 from .models import Request
+from .forms import RequestForm
 
 
 def login_view(request):
@@ -54,15 +55,44 @@ def manage_users_groups(request):
 
 
 def create(request):
-    # TODO: Implement create view
-    pass
+    if request.method == 'POST':
+        form = RequestForm(request.POST)
+        if form.is_valid():
+            # Check if request already exists
+            title = form.cleaned_data.get('title')
+            description = form.cleaned_data.get('description')
+            existing_request = Request.objects.filter(title=title, description=description).first()
+            if existing_request:
+                # Redirect to existing request
+                return redirect('approvals:detail', existing_request.pk)
+
+            # Create new request
+            request_obj = form.save()
+            return redirect('approvals:detail', request_obj.pk)
+    else:
+        form = RequestForm()
+
+    return render(request, 'approvals/request_create.html', {'form': form})
 
 
 class RequestCreateView(CreateView):
     model = Request
-    fields = ["title", "description"]
-    template_name = "approvals/request_create.html"
-    success_url = reverse_lazy("index")
+    form_class = RequestForm
+    success_url = reverse_lazy('approvals:index')
+    template_name = 'approvals/request_create.html'
+
+    def form_valid(self, form):
+        # Check if request already exists
+        title = form.cleaned_data.get('title')
+        description = form.cleaned_data.get('description')
+        existing_request, created = Request.objects.get_or_create(title=title, description=description)
+
+        if created:
+            # New request created
+            return super().form_valid(form)
+        else:
+            # Request already exists
+            return redirect('approvals:detail', existing_request.pk)
 
 
 from django.views.generic.detail import DetailView
@@ -90,3 +120,24 @@ class RequestListView(ListView):
     model = Request
     template_name = "approvals/request_list.html"
     context_object_name = "requests"
+
+from .models import Program
+
+class ProgramDetailView(DetailView):
+    model = Program
+    template_name = 'approvals/program_detail.html'
+    
+from django.views.generic.list import ListView
+from approvals.models import Program
+
+class ProgramListView(ListView):
+    model = Program
+    template_name = 'approvals/program_list.html'
+
+from django.views.generic import CreateView
+from .models import Program
+
+class ProgramCreateView(CreateView):
+    model = Program
+    fields = ['name', 'description']
+    template_name = 'approvals/program_form.html'
