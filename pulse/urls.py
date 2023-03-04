@@ -21,5 +21,6 @@ urlpatterns = [
     path('', include('approvals.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register/', views.register, name='register'),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
