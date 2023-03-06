@@ -1,192 +1,20 @@
 {% load static tailwind_tags %}
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Tailwind CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Pulse{% endblock %}</title>
     {% tailwind_css %}
-
-    <title>{% block title %}My App{% endblock title %}</title>
 </head>
 <body class="bg-gray-100">
-
-<!-- Navigation -->
-<nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <a href="{% url 'approvals:index' %}" class="text-white">
-                        My App
-                    </a>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="{% url 'approvals:index' %}"
-                           class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="#"
-                           class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Requests</a>
-                        {% if user.is_authenticated and user.is_staff %}
-                            <a href="{% url 'approvals:program_list' %}"
-                               class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Programs</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="-mr-2 flex md:hidden">
-                <button id="navButton" type="button"
-                        class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                    <span class="sr-only">Open main menu</span>
-                    <!-- Heroicon name: menu -->
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="hidden md:block">
-                <div class="ml-4 flex items-center md:ml-6">
-                    <button type="button"
-                            class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                        <span class="sr-only">View notifications</span>
-                        <!-- Heroicon name: bell -->
-                        <div class="hidden sm:flex sm:items-center sm:ml-6">
-                            <a href="{% url 'approvals:program_list' %}"
-                               class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Programs</a>
-                            <a href="#"
-                               class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Requests</a>
-                            {% if user.is_authenticated %}
-                                <div class="ml-3 relative">
-                                    <div>
-                                        <button id="user-menu"
-                                                class="flex items-center max-w-xs text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
-                                                aria-label="User menu" aria-haspopup="true">
-                                            <span class="sr-only">Open user menu</span>
-                                            <svg class="h-8 w-8 rounded-full text-gray-300 fill-current hover:text-white transition duration-150 ease-in-out">
-                                                <use xlink:href="{% static 'img/sprite.svg#icon-avatar' %}"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <!-- Profile dropdown -->
-                                    <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
-                                        <div class="py-1 rounded-md bg-white shadow-xs" role="menu"
-                                             aria-orientation="vertical" aria-labelledby="user-menu">
-                                            <a href="#"
-                                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
-                                               role="menuitem">Your Profile</a>
-                                            <a href="#"
-                                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
-                                               role="menuitem">Settings</a>
-                                            <div class="border-t border-gray-100"></div>
-                                            <a href="{% url 'logout' %}"
-                                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-150 ease-in-out"
-                                               role="menuitem">Sign out</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <div class="ml-3">
-                                    <div class="mt-3 sm:mt-0 sm:ml-4">
-                                        <a href="{% url 'login' %}"
-                                           class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Log
-                                            in</a>
-                                        <a href="#"
-                                           class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Sign
-                                            up</a>
-                                    </div>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
+    {% include 'partials/navbar.html' %}
+    <div class="container mx-auto mt-5">
+        {% block content %}
+        {% endblock %}
     </div>
-</nav>
-
-
-<div class="bg-gray-200 py-6">
-    <div class="container mx-auto px-4">
-        <h1 class="text-3xl py-4 font-bold">Dashboard</h1>
-
-    </div>
-    {% block content %}
-    {% endblock content %}
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-400 shadow">
-        <div class="container mx-auto flex py-8">
-            <div class="w-full mx-auto flex flex-wrap">
-                <div class="flex w-full lg:w-1/2 ">
-                    <div class="px-8">
-                        <h3 class="font-bold text-gray-900">About</h3>
-                        <p class="py-4 text-gray-600 text-sm">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel mi ut felis tempus
-                            commodo nec id erat. Suspendisse vestibulum sapien sed risus faucibus, eu condimentum ipsum
-                            commodo. Sed varius et ex at interdum.
-                        </p>
-                    </div>
-                </div>
-                <div class="flex w-full lg:w-1/2 lg:justify-end lg:text-right">
-                    <div class="px-8">
-                        <h3 class="font-bold text-gray-900">Social</h3>
-                        <ul class="list-reset items-center pt-3">
-                            <li>
-                                <a class="inline-block no-underline hover:text-black hover:underline py-1" href="#">Add
-                                    social media links</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <!-- <script src="{% static 'js/main.js' %}"></script> -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menuBtn = document.querySelector('.menu-btn');
-            const menuItems = document.querySelector('.menu-items');
-
-            menuBtn.addEventListener('click', function () {
-                menuBtn.classList.toggle('open');
-                menuItems.classList.toggle('hidden');
-            });
-
-            // Close the menu when a link is clicked
-            const menuLinks = document.querySelectorAll('.menu__link');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function () {
-                    menuBtn.classList.remove('open');
-                    menuItems.classList.add('hidden');
-                });
-            });
-
-            // Hide the menu when clicking outside of it
-            document.addEventListener('click', function (event) {
-                const isClickInside = menuBtn.contains(event.target) || menuItems.contains(event.target);
-                if (!isClickInside) {
-                    menuBtn.classList.remove('open');
-                    menuItems.classList.add('hidden');
-                }
-            });
-
-            // Hide the menu when scrolling
-            window.addEventListener('scroll', function () {
-                if (menuBtn.classList.contains('open')) {
-                    menuBtn.classList.remove('open');
-                    menuItems.classList.add('hidden');
-                }
-            });
-        });
-    </script>
-
-
+    <!-- <script src="{% static 'js/app.js' %}"></script> -->
 </body>
 </html>
-    

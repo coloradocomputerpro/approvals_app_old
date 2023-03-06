@@ -30,7 +30,9 @@ def logout_view(request):
 
 
 def index(request):
-    return render(request, "index.html")
+    requests = Request.objects.all()
+    context = {'requests': requests}
+    return render(request, 'index.html', context)
 
 
 @login_required

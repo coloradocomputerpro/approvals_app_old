@@ -24,7 +24,7 @@
                     {% for request in requests %}
                         <li>
                             <a
-                                    href="{% url 'approvals:detail' request.id %}"
+                                    href="{% url 'approvals:request_detail' request.id %}"
                                     class="text-indigo-600 hover:text-indigo-500 font-medium"
                             >{{ request.title }}</a
                             >

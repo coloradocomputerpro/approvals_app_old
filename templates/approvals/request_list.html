@@ -6,7 +6,7 @@
         <ul>
             {% for request in requests %}
                 <li class="mb-2">
-                    <a href="{% url 'request_detail' request.pk %}"
+                    <a href="{% url 'approvals:request_detail' request.pk %}"
                        class="text-indigo-600 hover:text-indigo-500 font-semibold">{{ request.title }}</a>
                     <span class="text-gray-600">({{ request.status }})</span>
                 </li>
