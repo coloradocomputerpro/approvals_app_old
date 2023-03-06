@@ -57,7 +57,7 @@ from approvals.models import Request
 @method_decorator(login_required, name='dispatch')
 class RequestCreateView(LoginRequiredMixin, CreateView):
     model = Request
-    fields = ['title', 'description']
+    fields = ['title', 'description', 'program']
     template_name = 'approvals/request_create.html'
 
     def form_valid(self, form):
@@ -67,6 +67,11 @@ class RequestCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('approvals:index')
+    
+    def get_context_data(self, **kwargs):
+        context = super(RequestCreateView, self).get_context_data(**kwargs)
+        context['programs'] = Program.objects.all()
+        return context
 
 
 from django.views.generic.detail import DetailView
@@ -143,3 +148,25 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+
+from .models import Request
+
+
+class RequestDeleteView(LoginRequiredMixin, DeleteView):
+    model = Request
+    template_name = 'approvals/request_delete.html'
+    success_url = reverse_lazy('approvals:request_list')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(created_by=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)

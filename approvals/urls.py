@@ -18,13 +18,15 @@ from .views import (
     RequestListView,
     RequestDetailView,
     RequestUpdateView,
+    RequestDeleteView,
 )
 
 urlpatterns += [
+    path("<int:pk>/", RequestDetailView.as_view(), name="request_detail"),
     path('requests/', RequestListView.as_view(), name='request_list'),
     path("request/create/", RequestCreateView.as_view(), name="request_create"),
-    path("<int:pk>/", RequestDetailView.as_view(), name="request_detail"),
-    path("<int:pk>/update/", RequestUpdateView.as_view(), name="request_update"),
+    path("request/<int:pk>/delete/", RequestDeleteView.as_view(), name="request_delete"),
+    path("request/<int:pk>/update/", RequestUpdateView.as_view(), name="request_update"),
 ]
 
 from approvals.views import ProgramListView, ProgramCreateView
