@@ -53,7 +53,7 @@ def manage_notices(request):
 def manage_users_groups(request):
     return render(request, "manage_users_groups.html")
 
-
+@login_required
 def create(request):
     if request.method == 'POST':
         form = RequestForm(request.POST)
@@ -74,7 +74,14 @@ def create(request):
 
     return render(request, 'approvals/request_create.html', {'form': form})
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
 
+@method_decorator(login_required, name='dispatch')
 class RequestCreateView(CreateView):
     model = Request
     form_class = RequestForm
@@ -82,17 +89,8 @@ class RequestCreateView(CreateView):
     template_name = 'approvals/request_create.html'
 
     def form_valid(self, form):
-        # Check if request already exists
-        title = form.cleaned_data.get('title')
-        description = form.cleaned_data.get('description')
-        existing_request, created = Request.objects.get_or_create(title=title, description=description)
-
-        if created:
-            # New request created
-            return super().form_valid(form)
-        else:
-            # Request already exists
-            return redirect('approvals:detail', existing_request.pk)
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 
 from django.views.generic.detail import DetailView
