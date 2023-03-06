@@ -1,18 +1,8 @@
 # approvals/views.py
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
 
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
-
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
-from django.urls import reverse_lazy
-from .models import Request
-from .forms import RequestForm
 
 
 def login_view(request):
@@ -27,7 +17,6 @@ def login_view(request):
     return render(request, "auth/login.html", {"form": form})
 
 
-from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 
 
@@ -53,44 +42,29 @@ def manage_notices(request):
 def manage_users_groups(request):
     return render(request, "manage_users_groups.html")
 
-@login_required
-def create(request):
-    if request.method == 'POST':
-        form = RequestForm(request.POST)
-        if form.is_valid():
-            # Check if request already exists
-            title = form.cleaned_data.get('title')
-            description = form.cleaned_data.get('description')
-            existing_request = Request.objects.filter(title=title, description=description).first()
-            if existing_request:
-                # Redirect to existing request
-                return redirect('approvals:detail', existing_request.pk)
-
-            # Create new request
-            request_obj = form.save()
-            return redirect('approvals:detail', request_obj.pk)
-    else:
-        form = RequestForm()
-
-    return render(request, 'approvals/request_create.html', {'form': form})
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from approvals.models import Request
+
+
 @method_decorator(login_required, name='dispatch')
-class RequestCreateView(CreateView):
+class RequestCreateView(LoginRequiredMixin, CreateView):
     model = Request
-    form_class = RequestForm
-    success_url = reverse_lazy('approvals:index')
+    fields = ['title', 'description']
     template_name = 'approvals/request_create.html'
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
+        form.save()
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('approvals:index')
 
 
 from django.views.generic.detail import DetailView
@@ -119,34 +93,40 @@ class RequestListView(ListView):
     template_name = "approvals/request_list.html"
     context_object_name = "requests"
 
+
 from .models import Program
+
 
 class ProgramDetailView(DetailView):
     model = Program
     template_name = 'approvals/program_detail.html'
-    
+
+
 from django.views.generic.list import ListView
 from approvals.models import Program
+
 
 class ProgramListView(ListView):
     model = Program
     template_name = 'approvals/program_list.html'
 
+
 from django.views.generic import CreateView
 from .models import Program
+
 
 class ProgramCreateView(CreateView):
     model = Program
     fields = ['name', 'description']
     template_name = 'approvals/program_form.html'
 
-from django.contrib.auth.forms import UserCreationForm
+
 from django.urls import reverse_lazy
-from django.views import generic
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
+
 
 def register(request):
     if request.method == 'POST':

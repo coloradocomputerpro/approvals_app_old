@@ -1,6 +1,6 @@
 from django.urls import path
+
 from . import views
-from django.http import HttpResponse
 
 app_name = "approvals"
 
@@ -10,7 +10,6 @@ urlpatterns = [
     path("manage-users-groups/", views.manage_users_groups, name="manage_users_groups"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-    path("create/", views.create, name="create"),
 ]
 
 from django.urls import path
@@ -28,7 +27,8 @@ urlpatterns += [
     path("<int:pk>/update/", RequestUpdateView.as_view(), name="request_update"),
 ]
 
-from approvals.views import ProgramListView, ProgramCreateView, ProgramDetailView
+from approvals.views import ProgramListView, ProgramCreateView
+
 urlpatterns += [
     path('programs/', ProgramListView.as_view(), name='program_list'),
     path('program/create/', ProgramCreateView.as_view(), name='program_create'),
