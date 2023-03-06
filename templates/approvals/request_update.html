@@ -1,14 +1,52 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container mx-auto mt-6">
-        <h2 class="text-xl font-semibold mb-4">Update Request</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Save Changes
-            </button>
-        </form>
-    </div>
+<div class="container mx-auto mt-6">
+    <h2 class="text-xl font-semibold mb-4">Update Request</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <ul id="assigned-users" class="py-4">
+            <!-- List of assigned users goes here -->
+        </ul>
+
+        <ul id="available-users" class="py-4">
+            <!-- List of available users goes here -->
+        </ul>
+        {% for user in available_users %}
+        <li draggable="true" data-user-id="{{ user.id }}" class="bg-white p-4 rounded-md mb-4">
+            <!-- Display user information here -->
+        </li>
+        {% endfor %}
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Save Changes
+        </button>
+    </form>
+</div>
+
+<script>
+    const availableUsers = document.querySelectorAll('#available-users li');
+
+    availableUsers.forEach(user => {
+        user.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('user-id', e.target.dataset.userId);
+            e.dataTransfer.setData('source-id', e.target.parentElement.id);
+        });
+    });
+    const assignedUsers = document.querySelector('#assigned-users');
+
+    assignedUsers.addEventListener('dragover', e => {
+        e.preventDefault();
+    });
+    assignedUsers.addEventListener('drop', e => {
+        const userId = e.dataTransfer.getData('user-id');
+        const sourceId = e.dataTransfer.getData('source-id');
+        const user = document.querySelector(`#${sourceId} li[data-user-id="${userId}"]`);
+
+        if (user) {
+            assignedUsers.appendChild(user);
+        }
+    });
+
+</script>
 {% endblock %}

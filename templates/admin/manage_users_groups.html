@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Manage Users and Groups</h1>
+  
+  <h2>Users</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Groups</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            {% for group in user.groups.all %}
+              {{ group.name }}
+            {% empty %}
+              None
+            {% endfor %}
+          </td>
+          <td>
+            <a href="{% url 'approvals:user_edit' user.id %}">Edit</a>
+            |
+            <a href="{% url 'approvals:user_delete' user.id %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No users found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <h2>Groups</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Users</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for group in groups %}
+        <tr>
+          <td>{{ group.name }}</td>
+          <td>
+            {% for user in group.user_set.all %}
+              {{ user.username }}
+            {% empty %}
+              None
+            {% endfor %}
+          </td>
+          <td>
+            <a href="#">Edit</a>
+            |
+            <a href="#">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">No groups found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <a href="{% url 'approvals:user_create' %}">Create User</a>
+  <a href="#">Create Group</a>
+{% endblock %}

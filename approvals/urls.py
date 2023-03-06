@@ -4,10 +4,20 @@ from . import views
 
 app_name = "approvals"
 
+from .views import (
+    ManageUsersAndGroupsView,
+    UserUpdateView,
+    UserDeleteView,
+    UserCreateView,
+    )
+
 urlpatterns = [
     path("", views.index, name="index"),
     path("manage-notices/", views.manage_notices, name="manage_notices"),
-    path("manage-users-groups/", views.manage_users_groups, name="manage_users_groups"),
+    path("manage-users-groups/", ManageUsersAndGroupsView.as_view(), name="manage_users_groups"),
+    path("user/create/", UserCreateView.as_view(), name="user_create"),
+    path("user/<int:pk>/edit/", UserUpdateView.as_view(), name="user_edit"),
+    path("user/<int:pk>/delete/", UserUpdateView.as_view(), name="user_delete"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
 ]
