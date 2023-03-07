@@ -6,18 +6,33 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <ul id="assigned-users" class="py-4">
-            <!-- List of assigned users goes here -->
-        </ul>
+        <div class="grid grid-cols-2 gap-4">
+            <!-- All Users Box -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-lg font-medium mb-4">All Users</h2>
+                <ul class="divide-y divide-gray-200">
+                    {% for user in all_users %}
+                    <li class="py-2 flex items-center">
+                        <span class="text-gray-500">{{ user.username }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-        <ul id="available-users" class="py-4">
-            <!-- List of available users goes here -->
-        </ul>
-        {% for user in available_users %}
-        <li draggable="true" data-user-id="{{ user.id }}" class="bg-white p-4 rounded-md mb-4">
-            <!-- Display user information here -->
-        </li>
-        {% endfor %}
+            <!-- Assigned Users Box -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-lg font-medium mb-4">Assigned Users</h2>
+                <ul class="divide-y divide-gray-200">
+                    {% for user in assigned_users %}
+                    <li class="py-2 flex items-center">
+                        <span class="text-gray-500">{{ user.username }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Save Changes
         </button>
@@ -25,28 +40,36 @@
 </div>
 
 <script>
-    const availableUsers = document.querySelectorAll('#available-users li');
+    // Get the "All Users" and "Assigned Users" boxes
+    const allUsersBox = document.querySelector('#all-users-box');
+    const assignedUsersBox = document.querySelector('#assigned-users-box');
 
-    availableUsers.forEach(user => {
-        user.addEventListener('dragstart', e => {
-            e.dataTransfer.setData('user-id', e.target.dataset.userId);
-            e.dataTransfer.setData('source-id', e.target.parentElement.id);
+    // Get all the user list items in the "All Users" box
+    const allUsers = allUsersBox.querySelectorAll('li');
+
+    // Add a click event listener to each "All Users" list item
+    allUsers.forEach(user => {
+        user.addEventListener('click', () => {
+            // Remove the user from the "All Users" box
+            user.remove();
+
+            // Add the user to the "Assigned Users" box
+            assignedUsersBox.querySelector('ul').appendChild(user);
         });
     });
-    const assignedUsers = document.querySelector('#assigned-users');
 
-    assignedUsers.addEventListener('dragover', e => {
-        e.preventDefault();
+    // Get all the user list items in the "Assigned Users" box
+    const assignedUsers = assignedUsersBox.querySelectorAll('li');
+
+    // Add a click event listener to each "Assigned Users" list item
+    assignedUsers.forEach(user => {
+        user.addEventListener('click', () => {
+            // Remove the user from the "Assigned Users" box
+            user.remove();
+
+            // Add the user to the "All Users" box
+            allUsersBox.querySelector('ul').appendChild(user);
+        });
     });
-    assignedUsers.addEventListener('drop', e => {
-        const userId = e.dataTransfer.getData('user-id');
-        const sourceId = e.dataTransfer.getData('source-id');
-        const user = document.querySelector(`#${sourceId} li[data-user-id="${userId}"]`);
-
-        if (user) {
-            assignedUsers.appendChild(user);
-        }
-    });
-
 </script>
 {% endblock %}

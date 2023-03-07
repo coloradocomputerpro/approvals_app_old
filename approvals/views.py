@@ -3,6 +3,8 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+
 
 
 def login_view(request):
@@ -83,14 +85,15 @@ from django.contrib.auth.models import User
 
 class RequestUpdateView(UpdateView):
     model = Request
-    fields = ["title", "description", "status", "assigned_to"]
+    fields = ["title", "description", "status", "program"]
     template_name = "approvals/request_update.html"
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("approvals:index")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["programs"] = Program.objects.all()
-        context["users"] = User.objects.all()
+        context["all_users"] = User.objects.all()
+        context['assigned_users'] = self.object.assigned_to.all()
         return context
 
 
@@ -242,4 +245,9 @@ class UserCreateView(CreateView):
     model = User
     fields = ['username', 'email', 'password']
     template_name = 'admin/create_user.html'
-    success_url = reverse_lazy('approvals:manage_user_groups')
+    success_url = reverse_lazy('approvals:manage_users_groups')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'User created successfully.')
+        return response
