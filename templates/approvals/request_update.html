@@ -6,31 +6,36 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-medium">Assigned Users</h2>
+        </div>
+
         <div class="grid grid-cols-2 gap-4">
             <!-- All Users Box -->
             <div class="bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-lg font-medium mb-4">All Users</h2>
-                <ul class="divide-y divide-gray-200">
-                    {% for user in all_users %}
-                    <li class="py-2 flex items-center">
-                        <span class="text-gray-500">{{ user.username }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
+              <h2 class="text-lg font-medium mb-4">All Users</h2>
+              <ul class="divide-y divide-gray-200">
+                {% for user in all_users %}
+                  <li class="py-2 flex items-center">
+                    <span class="text-gray-500">{{ user.username }}</span>
+                    <button class="ml-auto px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onclick="addUser(event, '{{ user.id }}', '{{ user.username }}')">Add</button>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-
+          
             <!-- Assigned Users Box -->
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-lg font-medium mb-4">Assigned Users</h2>
-                <ul class="divide-y divide-gray-200">
-                    {% for user in assigned_users %}
-                    <li class="py-2 flex items-center">
-                        <span class="text-gray-500">{{ user.username }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
+            <div class="bg-white rounded-lg shadow-md p-4" id="assigned-users">
+              <h2 class="text-lg font-medium mb-4">Assigned Users</h2>
+              <ul class="divide-y divide-gray-200">
+                {% for user in assigned_users %}
+                  <li class="py-2 flex items-center">
+                    <span class="text-gray-500">{{ user.username }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-        </div>
+          </div>
 
 
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -40,36 +45,29 @@
 </div>
 
 <script>
-    // Get the "All Users" and "Assigned Users" boxes
-    const allUsersBox = document.querySelector('#all-users-box');
-    const assignedUsersBox = document.querySelector('#assigned-users-box');
+  function addUser(event, userId, username) {
+    event.preventDefault();
+    // Create new list item with username and remove button
+    const li = document.createElement('li');
+    li.classList.add('py-2', 'flex', 'items-center');
+    li.innerHTML = `
+      <span class="text-gray-500">${username}</span>
+      <button class="ml-auto px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600" onclick="removeUser(event, this)">Remove</button>
+      <input type="hidden" name="assigned_users" value="${userId}">
+    `;
 
-    // Get all the user list items in the "All Users" box
-    const allUsers = allUsersBox.querySelectorAll('li');
+    // Add new list item to Assigned Users list
+    const assignedUsersList = document.querySelector('#assigned-users ul');
+    assignedUsersList.appendChild(li);
+  }
 
-    // Add a click event listener to each "All Users" list item
-    allUsers.forEach(user => {
-        user.addEventListener('click', () => {
-            // Remove the user from the "All Users" box
-            user.remove();
+  function removeUser(event, button) {
+    event.preventDefault();
+    // Remove list item containing the remove button
+    button.parentElement.remove();
+  }
 
-            // Add the user to the "Assigned Users" box
-            assignedUsersBox.querySelector('ul').appendChild(user);
-        });
-    });
-
-    // Get all the user list items in the "Assigned Users" box
-    const assignedUsers = assignedUsersBox.querySelectorAll('li');
-
-    // Add a click event listener to each "Assigned Users" list item
-    assignedUsers.forEach(user => {
-        user.addEventListener('click', () => {
-            // Remove the user from the "Assigned Users" box
-            user.remove();
-
-            // Add the user to the "All Users" box
-            allUsersBox.querySelector('ul').appendChild(user);
-        });
-    });
 </script>
+
+
 {% endblock %}

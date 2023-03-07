@@ -36,6 +36,8 @@ urlpatterns += [
     path("request/create/", RequestCreateView.as_view(), name="request_create"),
     path("request/<int:pk>/delete/", RequestDeleteView.as_view(), name="request_delete"),
     path("request/<int:pk>/update/", RequestUpdateView.as_view(), name="request_update"),
+    path('request/<int:pk>/update_assigned_users/', views.update_assigned_users, name='request_update_assigned_users'),
+
 ]
 
 from approvals.views import ProgramListView, ProgramCreateView

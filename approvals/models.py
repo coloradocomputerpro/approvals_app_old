@@ -2,16 +2,46 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class Approver(models.Model):
+    TYPE_CHOICES = [
+        ("client", "Client"),
+        ("integrator", "Systems Integrator"),
+        ("authority", "Authority"),
+        ("vendor", "Vendor"),
+    ]
+
+    SUB_TYPE_CHOICES = [
+        ("none", "N/A"),
+        ("procure", "Procurement"),
+        ("project", "Project Manager"),
+        ("assurance", "Information Assure"),
+        ("developer", "Developer"),
+        ("sustain", "Sustainment"),
+        ("operator", "Operator"),
+        ("lead", "Lead"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    sub_type = models.CharField(max_length=20, choices=SUB_TYPE_CHOICES, default="none")
+
+
 class Program(models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField(blank=True)
+    approvers = models.ManyToManyField(Approver, blank=True)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse("approvals:program_detail", args=[str(self.id)])
-
 
 
 class Request(models.Model):
@@ -30,5 +60,3 @@ class Request(models.Model):
 
     def __str__(self):
         return self.title
-
-

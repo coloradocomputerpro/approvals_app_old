@@ -105,11 +105,21 @@ class RequestListView(ListView):
 
 
 from .models import Program
+from .models import Approver
 
 
 class ProgramDetailView(DetailView):
     model = Program
     template_name = "approvals/program_detail.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        program = self.get_object()
+        context['approvers'] = program.approvers.all()
+        context['approver_types'] = Approver.TYPE_CHOICES
+        context['approver_subtypes'] = Approver.SUB_TYPE_CHOICES
+        return context
+    
 
 
 from django.views.generic.list import ListView
@@ -246,3 +256,13 @@ class UserCreateView(CreateView):
         response = super().form_valid(form)
         messages.success(self.request, 'User created successfully.')
         return response
+    
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
+def update_assigned_users(request, pk):
+    request_obj = get_object_or_404(Request, pk=pk)
+    assigned_users = request.POST.getlist('assigned_users[]')
+    request_obj.assigned_users.set(assigned_users)
+    request_obj.save()
+    return JsonResponse({'success': True})
