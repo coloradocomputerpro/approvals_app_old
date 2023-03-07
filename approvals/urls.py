@@ -7,7 +7,6 @@ app_name = "approvals"
 from .views import (
     ManageUsersAndGroupsView,
     UserUpdateView,
-    UserDeleteView,
     UserCreateView,
     )
 

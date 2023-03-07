@@ -1,10 +1,9 @@
 # approvals/views.py
 
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 def login_view(request):
@@ -80,7 +79,6 @@ class RequestDetailView(DetailView):
 
 
 from django.views.generic.edit import UpdateView
-from django.contrib.auth.models import User
 
 
 class RequestUpdateView(UpdateView):
@@ -133,9 +131,6 @@ class ProgramCreateView(CreateView):
     template_name = "approvals/program_form.html"
 
 
-from django.urls import reverse_lazy
-
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 
@@ -178,7 +173,7 @@ class RequestDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.views import View
 
