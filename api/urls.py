@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import get_approver_data, get_users
+from .views import ApproverListCreateView, ApproverDetailView, ApproverTypeListCreateView, ApproverTypeDetailView
 
 urlpatterns = [
-    # ... other URL patterns ...
-    path('get_users/', get_users, name='get_users'),
-    path('get_approver_data/', get_approver_data, name='get_approver_data'),
+    path('approvers/', ApproverListCreateView.as_view(), name='approver-list-create'),
+    path('approvers/<int:pk>/', ApproverDetailView.as_view(), name='approver-detail'),
+    path('approver-types/', ApproverTypeListCreateView.as_view(), name='approver-type-list-create'),
+    path('approver-types/<int:pk>/', ApproverTypeDetailView.as_view(), name='approver-type-detail'),
 ]

@@ -1,28 +1,19 @@
-from django.shortcuts import render
+from rest_framework import generics
+from approvals.models import Approver, ApproverType
+from .serializers import ApproverSerializer, ApproverTypeSerializer
 
-# Create your views here.
+class ApproverListCreateView(generics.ListCreateAPIView):
+    queryset = Approver.objects.all()
+    serializer_class = ApproverSerializer
 
-from django.http import JsonResponse
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-import json
+class ApproverDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Approver.objects.all()
+    serializer_class = ApproverSerializer
 
-@csrf_exempt
-def get_approver_data(request):
-    approver_users = list(User.objects.filter(groups__name='Approvers').values('id', 'username'))
-    approver_types = ['end_client', 'systems_integrator', 'gov_body', 'vendor_pm', 'vendor_dev', 'vendor_adm']
-    approver_subtypes = {'end_client': ['subtype1', 'subtype2', 'subtype3'],
-                         'systems_integrator': ['subtype1', 'subtype2', 'subtype3'],
-                         'gov_body': ['subtype1', 'subtype2', 'subtype3'],
-                         'vendor_pm': ['subtype1', 'subtype2', 'subtype3'],
-                         'vendor_dev': ['subtype1', 'subtype2', 'subtype3'],
-                         'vendor_adm': ['subtype1', 'subtype2', 'subtype3']}
-    data = {'approver_users': approver_users, 'approver_types': approver_types, 'approver_subtypes': approver_subtypes}
-    return JsonResponse(json.dumps(data), safe=False)
+class ApproverTypeListCreateView(generics.ListCreateAPIView):
+    queryset = ApproverType.objects.all()
+    serializer_class = ApproverTypeSerializer
 
-from django.contrib.auth.models import User
-from django.core import serializers
-
-def get_users(request):
-    users = User.objects.all().values('id', 'username')
-    return JsonResponse(list(users), safe=False)
+class ApproverTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ApproverType.objects.all()
+    serializer_class = ApproverTypeSerializer
