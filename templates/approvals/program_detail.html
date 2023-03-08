@@ -47,12 +47,18 @@
         <div class="bg-white rounded-lg shadow-md p-4">
             <h2 class="text-lg font-medium mb-4">Add Approver</h2>
             <div x-data="getUserData()">
-                <button x-on:click="getUsers()">Get Users</button>
+                <button x-on:click="getUsers()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Add Approver
+                </button>
                 <div x-show="users.length > 0" class="flex flex-wrap">
                     <template x-for="user in users" :key="user.id">
                         <div class="bg-white rounded-lg shadow-md m-4 p-4 w-64">
-                            <h2 class="text-lg font-medium mb-4">{{ user.username }}</h2>
-                            <p class="text-sm text-gray-500">{{ user.email }}</p>
+                            <h2 class="text-lg font-medium mb-4" x-text="user.username"></h2>
+                            <p class="text-sm text-gray-500" x-text="user.email"></p>
+                            <button
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                x-on:click="addApprover(user)">Add</button>
                         </div>
                     </template>
                 </div>
@@ -60,11 +66,7 @@
 
 
 
-            <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit">
-                Add Approver
-            </button>
+
         </div>
     </div>
 </div>
@@ -75,6 +77,25 @@
         return {
             users: [],
             errorMsg: '',
+            allUsers: [],
+            loading: true,
+            addApprover(user) {
+                const data = { user_id: user.id };
+                fetch('/api/approvers/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(json => {
+                        // Do something with the response, e.g. update the list of approvers
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            },
             getUsers() {
                 const url = '/api/users/';
                 fetch(url)

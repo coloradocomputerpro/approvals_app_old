@@ -9,20 +9,19 @@ from .views import (
     ApproverTypeDetailView,
 )
 
+from django.urls import include, path
+from rest_framework import routers
+from . import views
+
+router = routers.DefaultRouter()
+router.register(r'programs', views.ProgramViewSet)
+router.register(r'users', views.UserViewSet)
+router.register(r'approvers', views.ApproverViewSet)
+
 urlpatterns = [
-    path("approvers/", ApproverListCreateView.as_view(), name="approver-list-create"),
-    path("approvers/<int:pk>/", ApproverDetailView.as_view(), name="approver-detail"),
-    path(
-        "approver-types/",
-        ApproverTypeListCreateView.as_view(),
-        name="approver-type-list-create",
-    ),
-    path(
-        "approver-types/<int:pk>/",
-        ApproverTypeDetailView.as_view(),
-        name="approver-type-detail",
-    ),
+    path('', include(router.urls)),
 ]
+
 
 
 # Users

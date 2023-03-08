@@ -18,3 +18,28 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']
+
+from rest_framework import serializers
+from approvals.models import Program, Approver
+
+class ApproverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Approver
+        fields = '__all__'
+
+class ProgramSerializer(serializers.ModelSerializer):
+    approvers = ApproverSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Program
+        fields = '__all__'
+
+from rest_framework import serializers
+from approvals.models import Approver
+
+
+class ApproverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Approver
+        fields = ('id', 'user', 'program', 'created_at')
+        read_only_fields = ('created_at',)
