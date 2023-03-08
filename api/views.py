@@ -47,6 +47,7 @@ from .serializers import UserSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    #permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=['GET'])
     def programs(self, request, pk=None):
@@ -65,6 +66,7 @@ class ApproverList(mixins.ListModelMixin,
     queryset = Approver.objects.all()
     serializer_class = ApproverSerializer
     renderer_classes = [BrowsableAPIRenderer]  # add BrowsableAPIRenderer to render the API in the browser
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -80,6 +82,7 @@ class ApproverDetail(mixins.RetrieveModelMixin,
     queryset = Approver.objects.all()
     serializer_class = ApproverSerializer
     renderer_classes = [BrowsableAPIRenderer]  # add BrowsableAPIRenderer to render the API in the browser
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -97,10 +100,13 @@ from rest_framework import status
 
 from approvals.models import Program
 from .serializers import ProgramSerializer
+from .permissions import IsProgramMemberOrReadOnly
 
 class ProgramViewSet(viewsets.ModelViewSet):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
+    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsProgramMemberOrReadOnly]
 
     @action(detail=True, methods=['get'])
     def approvers(self, request, pk=None):
@@ -138,3 +144,14 @@ from api.serializers import ApproverSerializer
 class ApproverViewSet(viewsets.ModelViewSet):
     queryset = Approver.objects.all()
     serializer_class = ApproverSerializer
+    #permission_classes = [IsAuthenticated]
+
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from approvals.models import Request
+from .serializers import RequestSerializer
+
+class RequestViewSet(viewsets.ModelViewSet):
+    queryset = Request.objects.all()
+    serializer_class = RequestSerializer
+    #permission_classes = [IsAuthenticated]

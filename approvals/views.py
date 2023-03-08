@@ -115,7 +115,7 @@ class ProgramDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         program = self.get_object()
-        context['approvers'] = program.approvers.all()
+        context['default_approvers'] = program.default_approvers.all()
         context['approver_types'] = Approver.TYPE_CHOICES
         context['approver_subtypes'] = Approver.SUB_TYPE_CHOICES
         return context

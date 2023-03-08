@@ -43,3 +43,11 @@ class ApproverSerializer(serializers.ModelSerializer):
         model = Approver
         fields = ('id', 'user')
         read_only_fields = ('user',)
+
+from rest_framework import serializers
+from approvals.models import Request
+
+class RequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Request
+        fields = '__all__'

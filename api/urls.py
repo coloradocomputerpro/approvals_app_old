@@ -17,6 +17,7 @@ router = routers.DefaultRouter()
 router.register(r'programs', views.ProgramViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'approvers', views.ApproverViewSet)
+router.register(r'requests', views.RequestViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
