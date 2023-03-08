@@ -41,5 +41,5 @@ from approvals.models import Approver
 class ApproverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Approver
-        fields = ('id', 'user', 'program', 'created_at')
-        read_only_fields = ('created_at',)
+        fields = ('id', 'user')
+        read_only_fields = ('user',)

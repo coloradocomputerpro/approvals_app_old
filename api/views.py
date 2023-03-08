@@ -138,4 +138,3 @@ from api.serializers import ApproverSerializer
 class ApproverViewSet(viewsets.ModelViewSet):
     queryset = Approver.objects.all()
     serializer_class = ApproverSerializer
-    permission_classes = [IsAuthenticated]

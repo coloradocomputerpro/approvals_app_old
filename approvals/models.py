@@ -7,6 +7,18 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+class Program(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    description = models.TextField(blank=True)
+    approvers = models.ManyToManyField(User, related_name='programs')
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("approvals:program_detail", args=[str(self.id)])
+
 class ApproverType(models.Model):
     name = models.CharField(max_length=50)
 
@@ -36,18 +48,6 @@ class Approver(models.Model):
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     sub_type = models.CharField(max_length=20, choices=SUB_TYPE_CHOICES, default="none")
     approver_type = models.ForeignKey(ApproverType, on_delete=models.CASCADE, null=True)
-
-
-class Program(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    description = models.TextField(blank=True)
-    approvers = models.ManyToManyField(Approver, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("approvals:program_detail", args=[str(self.id)])
 
 
 class Request(models.Model):
