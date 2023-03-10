@@ -28,6 +28,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
+from django.shortcuts import get_object_or_404
+
 
 
 class UserList(APIView):
@@ -141,10 +143,37 @@ from approvals.models import Approver
 from api.serializers import ApproverSerializer
 
 
+from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+
+from approvals.models import Approver
+from .serializers import ApproverSerializer
+
 class ApproverViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows approvers to be viewed or edited.
+    """
     queryset = Approver.objects.all()
     serializer_class = ApproverSerializer
-    #permission_classes = [IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        program_id = serializer.validated_data['program']
+        program = get_object_or_404(Program, pk=program_id)
+        serializer.save()
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        approver = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(approver, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        program_id = serializer.validated_data['program']
+        program = get_object_or_404(Program, pk=program_id)
+        serializer.save()
+        return Response(serializer.data)
+
 
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated

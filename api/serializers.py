@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from approvals.models import Approver, ApproverType
+from approvals.models import Approver, ApproverType, Program
 
 class ApproverSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='user.username')
+    email = serializers.ReadOnlyField(source='user.email')
+    program_name = serializers.ReadOnlyField(source='program.name')
+    program_id = serializers.PrimaryKeyRelatedField(queryset=Program.objects.all(), source='program')
+    
     class Meta:
         model = Approver
-        fields = '__all__'
+        fields = ['id', 'username', 'email', 'type', 'program_name', 'program_id']
 
 class ApproverTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,10 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 from rest_framework import serializers
 from approvals.models import Program, Approver
 
-class ApproverSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Approver
-        fields = '__all__'
+
 
 class ProgramSerializer(serializers.ModelSerializer):
     approvers = ApproverSerializer(many=True, read_only=True)
@@ -38,11 +40,7 @@ from rest_framework import serializers
 from approvals.models import Approver
 
 
-class ApproverSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Approver
-        fields = ('id', 'user')
-        read_only_fields = ('user',)
+
 
 from rest_framework import serializers
 from approvals.models import Request
