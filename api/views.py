@@ -174,6 +174,29 @@ class ApproverViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, status
+from rest_framework.response import Response
+
+from approvals.models import Program
+from .serializers import ProgramSerializer
+
+class ProgramMemberAddView(generics.CreateAPIView):
+    serializer_class = ProgramSerializer
+
+    def post(self, request, *args, **kwargs):
+        program_id = request.data.get('program_id')
+        user_id = request.data.get('user_id')
+
+        program = get_object_or_404(Program, pk=program_id)
+        user = get_object_or_404(User, pk=user_id)
+
+        program.members.add(user)
+
+        serializer = self.serializer_class(program)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated

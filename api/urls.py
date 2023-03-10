@@ -24,8 +24,10 @@ urlpatterns = [
 ]
 
 
-
+from .views import ProgramMemberAddView
 # Users
 urlpatterns += [
     path("users/", views.UserList.as_view(), name="user-list"),
+    path('program_member_add/', ProgramMemberAddView.as_view(), name='program_member_add'),
+
 ]

@@ -11,8 +11,8 @@ User = get_user_model()
 class Program(models.Model):
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField(blank=True, null=True)
-    users = models.ManyToManyField(User)
-    default_approvers = models.ManyToManyField(User, related_name='programs')
+    members = models.ManyToManyField(User, related_name='programs')
+    default_approvers = models.ManyToManyField(User, related_name='default_approvers')
 
     def __str__(self):
         return self.name
