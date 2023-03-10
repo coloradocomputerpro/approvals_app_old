@@ -33,7 +33,10 @@
         <li class="py-2 flex items-center">
           <span class="text-gray-500 mr-2">{{ approver.username }}</span>
           <span class="text-gray-400">{{ approver.type }}</span>
-          <button class="text-red-500 ml-auto remove-approver-btn" data-approver-id="{{ approver.id }}">
+          <button
+            class="text-red-500 ml-auto remove-approver-btn"
+            data-approver-id="{{ approver.id }}"
+          >
             Remove
           </button>
         </li>
@@ -47,33 +50,55 @@
     <div class="bg-white rounded-lg shadow-md p-4">
       <h2 class="text-lg font-medium mb-4">Add Approver</h2>
       <div x-data="getUserData()">
-        <button x-on:click="getUsers()"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <button
+          x-on:click="getUsers()"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
           Add Approver
         </button>
         <div x-show="users.length > 0" class="flex flex-wrap">
           <template x-for="user in users" :key="user.id">
-            <div class="bg-white rounded-lg shadow-md m-4 p-4 w-64">
-              <h2 class="text-lg font-medium mb-4" x-text="user.username"></h2>
-              <p class="text-sm text-gray-500" x-text="user.email"></p>
-              <button x-on:click="addApprover(user)" x-show="!user.selectedType"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Select
-              </button>
-              <div x-show="user.selectedType" class="bg-white rounded-lg shadow-md m-4 p-4 w-64">
-                <h2 class="text-lg font-medium mb-4" x-text="user.username"></h2>
+            <div>
+              <div
+                x-show="!user.selectedType"
+                class="bg-white rounded-lg shadow-md m-4 p-4 w-64"
+              >
+                <h2
+                  class="text-lg font-medium mb-4"
+                  x-text="user.username"
+                ></h2>
                 <p class="text-sm text-gray-500" x-text="user.email"></p>
-                <select x-model="user.selectedType"
-                  class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                  <template x-for="type in program.approver_types" :key="type">
+                <button
+                  x-on:click="addApprover(user)"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Select
+                </button>
+              </div>
+              <div
+                x-show="user.selectedType"
+                class="bg-white rounded-lg shadow-md m-4 p-4 w-64"
+              >
+                <h2
+                  class="text-lg font-medium mb-4"
+                  x-text="user.username"
+                ></h2>
+                <p class="text-sm text-gray-500" x-text="user.email"></p>
+                <select
+                  x-model="user.selectedType"
+                  class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                >
+                  <template x-for="type in approver_types" :key="type">
                     <option x-text="type" :value="type"></option>
                   </template>
                 </select>
                 <button
                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  x-on:click="submitApprover(user)">Add</button>
+                  x-on:click="submitApprover(user)"
+                >
+                  Add
+                </button>
               </div>
-
             </div>
           </template>
         </div>
@@ -92,7 +117,7 @@
       program: {{ program.id }},
       approver_types: {{ approver_types|safe }},
       addApprover(user) {
-        user.selectedType = this.approver_types;
+        user.selectedType = this.approver_types[0];
         this.users = this.users.filter(u => u.id !== user.id);
         this.users.unshift(user);
       },
